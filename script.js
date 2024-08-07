@@ -77,6 +77,83 @@ const displayMovements = function (movements) {
 };
 displayMovements(account1.movements);
 
+const calacDisplayBalance = function (movements) {
+  const balance = movements.reduce((acc, mov) => acc + mov, 0);
+  labelBalance.textContent = `${balance} EUR`;
+};
+calacDisplayBalance(account1.movements);
+
+const calacDisplaySummary = function (acc) {
+  const income = acc.movements
+    .filter(mov => mov > 0)
+    .reduce((acc, mov) => acc + mov, 0);
+  labelSumIn.textContent = `${income}#`;
+
+  ///////////////OUT////////////
+  const out = acc.movements
+    .filter(mov => mov < 0)
+    .reduce((acc, mov) => acc + mov, 0);
+  labelSumOut.textContent = `${Math.abs(out)}#`;
+
+  const intrest = acc.movements
+    .filter(mov => mov > 0)
+    .map(deposit => (deposit * acc.interestRate) / 100)
+    .filter((int, i, arr) => {
+      // console.log(arr);
+      return int >= 1;
+    })
+    .reduce((acc, int) => acc + int, 0);
+  labelSumInterest.textContent = `${intrest}# `;
+};
+
+// calacDisplaySummary(account1.movements);
+
+/////////////////////////////////////////////////
+const creatUsernames = function (accs) {
+  accs.forEach(function (acc) {
+    acc.username = acc.owner
+      .toLowerCase()
+      .split(' ')
+      .map(name => name[0])
+      .join('');
+  });
+};
+creatUsernames(accounts);
+// console.log(accounts);
+
+//Event andler
+let currentAccount;
+
+btnLogin.addEventListener('click', function (e) {
+  e.preventDefault();
+
+  currentAccount = accounts.find(
+    acc => acc.username === inputLoginUsername.value
+  );
+  console.log(currentAccount);
+
+  if (currentAccount?.pin === Number(inputLoginPin.value)) {
+    //Display UI and message
+    labelWelcome.textContent = `Welcome back, ${
+      currentAccount.owner.split(' ')[0]
+    }`;
+    containerApp.style.opacity = 100;
+
+    //clear input field
+    inputLoginUsername.value = inputLoginPin.value = '';
+    inputLoginPin.blur();
+
+    //Display movements
+    displayMovements(currentAccount.movements);
+
+    // Display balance
+    calacDisplayBalance(currentAccount.movements);
+
+    //Display summary
+    calacDisplaySummary(currentAccount);
+  }
+});
+
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
 // LECTURES
@@ -155,7 +232,17 @@ movements.forEach(function(mov, i, arr){
     console.log(` Movements ${i + 1}: You witraw ${Math.abs(mov)}`);
   }
 });
-*/
+///////////////////////////////////////////////////////
+const calachumanAverageAge = age =>
+//   age
+//     .map(age => (age <= 2 ? 2 * age : 16 + age * 4))
+//     .filter(age => age >= 18)
+//     .reduce((acc, age, i, arr) => acc + age / arr.length, 0);
+
+// const avg1 = calachumanAverageAge([16, 6, 10, 5, 6, 1, 4]);
+// const avg2 = calachumanAverageAge([5, 2, 4, 1, 15, 8, 3]);
+// console.log(avg1, avg2);
+
 
 // const currencies = new Map([
 //   ['USD', 'United States dollar'],
@@ -172,3 +259,156 @@ movements.forEach(function(mov, i, arr){
 // currenciesUnique.forEach(function (value, key, map) {
 //   console.log(`${key}: ${value}`);
 // });
+
+
+Coding Challenge #1
+Julia and Kate are doing a study on dogs. So each of them asked 5 dog owners 
+about their dog's age, and stored the data into an array (one array for each). For 
+now, they are just interested in knowing whether a dog is an adult or a puppy.
+A dog is an adult if it is at least 3 years old, and it's a puppy if it's less than 3 years 
+old.
+Your tasks:
+Create a function 'checkDogs', which accepts 2 arrays of dog's ages 
+('dogsJulia' and 'dogsKate'), and does the following things:
+1. Julia found out that the owners of the first and the last two dogs actually have 
+cats, not dogs! So create a shallow copy of Julia's array, and remove the cat 
+ages from that copied array (because it's a bad practice to mutate function 
+parameters)
+2. Create an array with both Julia's (corrected) and Kate's data
+3. For each remaining dog, log to the console whether it's an adult ("Dog number 1 
+is an adult, and is 5 years old") or a puppy ("Dog number 2 is still a puppy 
+�
+")
+4. Run the function for both test datasets
+Test data:
+§ Data 1: Julia's data [3, 5, 2, 12, 7], Kate's data [4, 1, 15, 8, 3]
+§ Data 2: Julia's data [9, 16, 6, 8, 3], Kate's data [10, 5, 6, 1, 4]
+Hints: Use tools from all lectures in this section so far �
+
+*/
+
+// const checkDogs = function( dogsJulia, dogsKate ){
+//   const dogsJuliaCorrected = dogsJulia.slice();
+//   dogsJuliaCorrected.splice(0, 1)
+//   dogsJuliaCorrected.splice( -2)
+//   console.log(dogsJuliaCorrected);
+
+//   const dogs = dogsJuliaCorrected.concat(dogsKate);
+//   console.log(dogs);
+
+//   dogs.forEach(function(dog, i){
+//     if(dog >= 3){
+//       console.log(`Dog number ${i+1} is an adult, and is ${dog}  year old`);
+//     } else {
+//       console.log(`Dog is a ${i + 1} is still a puppy`)
+//     }
+//   })
+// };
+// const cqeckDogs = function(jonDogs){
+//   const dogs = jonDogs
+
+// const forLoop = [4, 5, 6, 7, 8, 9]
+//   dogs.forEach(function(dog, i){
+//   if (dog > 5){
+//     console.log(`${i + 1} This is a ${dog} year dog and adult`);
+//   } else{
+//     console.log(`${i + 1} This is a ${dog} year dog and a puppy`);
+//   }
+//   })
+// };
+
+//  cqeckDogs([4, 5, 6, 7, 8, 9])
+
+// console.log(userName);
+
+/////////Practice//////////////////
+
+// const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
+
+// const eurotoUsd = 1.1;
+
+// const movementsUsd = movements.map(function(mov) {
+//   return mov * eurotoUsd;
+// })
+
+// const movementsUsd = movements.map(mov => mov * eurotoUsd );
+
+// console.log(movementsUsd);
+
+// const movementsDescription = movements.map((mov, i, ) =>
+//   `Movements ${i + 1}: you ${mov > 0 ? 'deposited': 'witdrew'} ${Math.abs(mov)}`
+// );
+
+// console.log(movementsDescription);
+const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
+
+// const deposite = movements.filter(function(mov){
+//   return mov > 0
+// })
+// console.log(deposite);
+
+// const depositeFor = []
+// for(const mov of movements) if (mov > 0) depositeFor.push(mov);
+
+//   console.log(depositeFor);
+//   const withdrawal = movements.filter(mov => mov < 0)
+//   console.log(withdrawal);
+
+// const balance = movements.reduce((acc, cur) => acc + cur + 0);
+// console.log(balance);
+
+// let balance2 = 0;
+// for (const mov of movements) balance2 += mov;
+// console.log(balance2);
+
+////////////////////////////////////////////
+///////////////Maximum value////////////////
+///////////importanat conncept//////////////
+////////////////////////////////////////////
+// const max = movements.reduce((acc, mov) => {
+//   if (acc > mov) return acc;
+//   else return mov;
+// }, movements[0]);
+// console.log(max);
+
+// const calachumanAge = function (ages) {
+//   const humanAge = ages.map(age => age <= 2 ? 2 * age : 16 + age * 4)
+//   const belowAge = humanAge.filter( age => age > 18);
+//   console.log(humanAge);
+//   console.log(belowAge);
+//   const average = belowAge.reduce((acc, age) => acc + age , 0) / belowAge.length;
+//   return average;
+// };
+
+// const avrg1 =calachumanAge([5, 2, 4, 1, 15, 8, 3]);
+// const avrg2 =calachumanAge([16, 6, 10, 5, 6, 1, 4]);
+// console.log(avrg1, avrg2);
+///////////////////////////////////////////////////
+///////////////////////////////////////////////////
+
+// const belowAge = humanAge.filter(function(age){
+// return humanAge > 18})
+// console.log(belowAge);
+
+// const movementsUsd = movements.map(function(mov) {
+//   return mov * eurotoUsd;
+// })
+
+// const movementsUsd = movements.map(mov => mov * eurotoUsd );
+
+// console.log(movementsUsd);
+
+// const eurotoUsd = 1.1;
+
+// const totalDepositeUsd = movements
+//   .filter(mov => mov > 0)
+//   .map(mov => mov * eurotoUsd)
+//   .reduce((acc, mov) => acc + mov, 0);
+// console.log(totalDepositeUsd);
+
+// const firstWitDrawal = movements.find(mov => mov < 0);
+// console.log(movements);
+// console.log(firstWitDrawal);
+// const account = accounts.find(acc => acc.owner === 'Jessica Davis');
+// console.log(account);
+
